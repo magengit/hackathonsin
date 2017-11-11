@@ -31,6 +31,8 @@ SIN_MAGEN_INGESTION_POST_WITH_EMPTY_DOWNLOAD_URL = """
 
 home_dir = str(Path.home())
 hackathon_data_dir = os.path.join(home_dir, "magen_data", "hackathon")
+if not os.path.exists(hackathon_data_dir):
+    os.makedirs(hackathon_data_dir)
 server_urls_instance = ServerUrls().get_instance()
 hackaton_globals = HackathonGlobals()
 hackaton_globals.data_dir = hackathon_data_dir
