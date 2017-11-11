@@ -33,6 +33,10 @@ home_dir = str(Path.home())
 hackathon_data_dir = os.path.join(home_dir, "magen_data", "hackathon")
 if not os.path.exists(hackathon_data_dir):
     os.makedirs(hackathon_data_dir)
+
+with open("bearer.txt", "r+") as bearer_f:
+    bearer = bearer_f.read()
+
 server_urls_instance = ServerUrls().get_instance()
 hackaton_globals = HackathonGlobals()
 hackaton_globals.data_dir = hackathon_data_dir
@@ -52,8 +56,10 @@ container_file_name = file_name + ".html"
 url = "https://content.dropboxapi.com/2/files/upload"
 dropbox_api_arg = '{{\"path\":\"{}\"}}'.format(container_file_name)
 
+bearer_h = "Bearer {}".format(bearer)
+
 headers = {
-    "Authorization": "Bearer ddTxTjifXhYAAAAAAAAXo8nJQMUdDtfYAx7QH4enaaf4OED97uskv5-BSmOUz0Lu",
+    "Authorization": bearer_h,
     "Content-Type": "application/octet-stream",
     "Dropbox-API-Arg": "{\"path\":\"/test_up_2.txt.html\",\"mode\": \"overwrite\"}"
 }
@@ -64,7 +70,7 @@ r_upload = requests.post(url, headers=headers, data=data)
 url = "https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings"
 
 headers = {
-    "Authorization": "Bearer ddTxTjifXhYAAAAAAAAXo8nJQMUdDtfYAx7QH4enaaf4OED97uskv5-BSmOUz0Lu",
+    "Authorization": bearer_h,
     "Content-Type": "application/json"
 }
 
