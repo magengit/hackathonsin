@@ -52,17 +52,20 @@ post_resp_obj = RestClientApis.http_post_and_check_success(server_urls_instance.
 post_resp_json_obj = post_resp_obj.json_body
 container_file_path = post_resp_json_obj["response"]["asset"]["file_path"] + ".html"
 container_file_name = file_name + ".html"
+dropbox_path = "/" + container_file_name
 
 url = "https://content.dropboxapi.com/2/files/upload"
-dropbox_api_arg = '{{\"path\":\"{}\"}}'.format(container_file_name)
-
+dropbox_api_arg = {"path": dropbox_path, "mode": "overwrite"}
+dropbox_api_arg_str = json.dumps(dropbox_api_arg)
 bearer_h = "Bearer {}".format(bearer)
 
 headers = {
     "Authorization": bearer_h,
     "Content-Type": "application/octet-stream",
-    "Dropbox-API-Arg": "{\"path\":\"/test_up_2.txt.html\",\"mode\": \"overwrite\"}"
+    "Dropbox-API-Arg": dropbox_api_arg_str
 }
+
+#     "Dropbox-API-Arg": "{\"path\": dropbox_path, \"mode\": \"overwrite\"}"
 
 data = open(container_file_path, "rb").read()
 r_upload = requests.post(url, headers=headers, data=data)
@@ -75,7 +78,7 @@ headers = {
 }
 
 data = {
-    "path": "/test_up_2.txt.html",
+    "path": dropbox_path,
     "settings": {}
 }
 
@@ -84,12 +87,12 @@ if not r_create_link.ok:
     url = "https://api.dropboxapi.com/2/sharing/get_shared_links"
 
     headers = {
-        "Authorization": "Bearer ddTxTjifXhYAAAAAAAAXo8nJQMUdDtfYAx7QH4enaaf4OED97uskv5-BSmOUz0Lu",
+        "Authorization": bearer_h,
         "Content-Type": "application/json"
     }
 
     data = {
-        "path": "/test_up_2.txt.html"
+        "path": dropbox_path
     }
 
     r_create_link = requests.post(url, headers=headers, data=json.dumps(data))
