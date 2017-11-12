@@ -30,7 +30,7 @@ SIN_MAGEN_INGESTION_POST_WITH_EMPTY_DOWNLOAD_URL = """
 """
 
 home_dir = str(Path.home())
-hackathon_data_dir = os.path.join(home_dir, "magen_data", "hackathon")
+hackathon_data_dir = os.path.join(home_dir, "magen_data", "ingestion")
 if not os.path.exists(hackathon_data_dir):
     os.makedirs(hackathon_data_dir)
 
@@ -46,6 +46,12 @@ magen_file = open(src_file_full_path, 'w+')
 magen_file.write("this is a test")
 magen_file.close()
 post_json = json.loads(SIN_MAGEN_INGESTION_POST_WITH_EMPTY_DOWNLOAD_URL)
+
+get_resp_obj = RestClientApis.http_get_and_check_success(server_urls_instance.ingestion_server_check_url)
+get_resp_json_obj = get_resp_obj.json_body
+in_docker = get_resp_json_obj["response"]["docker"]
+if in_docker:
+    src_file_full_path = "/opt/data/" + file_name
 post_json["asset"][0]["download_url"] = "file://" + src_file_full_path
 post_resp_obj = RestClientApis.http_post_and_check_success(server_urls_instance.ingestion_server_asset_url,
                                     json.dumps(post_json))
