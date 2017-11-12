@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Assets Repository</title>
+
+    {% include 'stylesheets.html' %}
+
+ </head>
+
+<body>
+  <div class="container">
+    {% include 'header.html' %}
+    <div>
+      <h3 class="text-muted">Ingested Assets</h3>
+    </div>
+    <table style="width:80%">
+      {% for file in files %}
+      <tr>
+      <td>{{ file }}</td>
+          <td><a href="/repo/{{ file }}/">View</a></td>
+          <td><a href="/repo/{{ file }}/?raw_view=True">RawView</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+
+  </div>
+</body>
+
+</html>
