@@ -30,6 +30,7 @@ SIN_MAGEN_INGESTION_POST_WITH_EMPTY_DOWNLOAD_URL = """
 """
 
 home_dir = str(Path.home())
+# This is the local ingestion data dir. It is not visible under this name inside the Docker
 hackathon_data_dir = os.path.join(home_dir, "magen_data", "ingestion")
 if not os.path.exists(hackathon_data_dir):
     os.makedirs(hackathon_data_dir)
@@ -51,13 +52,19 @@ get_resp_obj = RestClientApis.http_get_and_check_success(server_urls_instance.in
 get_resp_json_obj = get_resp_obj.json_body
 in_docker = get_resp_json_obj["response"]["docker"]
 if in_docker:
+    # If ingestion is running inside docker, we need to use the destination volume as file url.
     src_file_full_path = "/opt/data/" + file_name
 post_json["asset"][0]["download_url"] = "file://" + src_file_full_path
+
+
 post_resp_obj = RestClientApis.http_post_and_check_success(server_urls_instance.ingestion_server_asset_url,
                                     json.dumps(post_json))
 post_resp_json_obj = post_resp_obj.json_body
 container_file_path = post_resp_json_obj["response"]["asset"]["file_path"] + ".html"
 container_file_name = file_name + ".html"
+if in_docker:
+    # Overwrite returned docker file path with the source volume so that it has significance.
+    container_file_path = hackathon_data_dir + "/" + container_file_name
 dropbox_path = "/" + container_file_name
 
 url = "https://content.dropboxapi.com/2/files/upload"
