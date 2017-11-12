@@ -83,36 +83,68 @@ headers = {
 data = open(container_file_path, "rb").read()
 r_upload = requests.post(url, headers=headers, data=data)
 
-url = "https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings"
 
-headers = {
+# url = "https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings"
+#
+# headers = {
+#     "Authorization": bearer_h,
+#     "Content-Type": "application/json"
+# }
+#
+# data = {
+#     "path": dropbox_path,
+#     "settings": {}
+# }
+
+
+# r_create_link = requests.post(url, headers=headers, data=json.dumps(data))
+# if not r_create_link.ok:
+#     url = "https://api.dropboxapi.com/2/sharing/get_shared_links"
+#
+#     headers = {
+#         "Authorization": bearer_h,
+#         "Content-Type": "application/json"
+#     }
+#
+#     data = {
+#         "path": dropbox_path
+#     }
+#
+#     r_create_link = requests.post(url, headers=headers, data=json.dumps(data))
+#     create_link_json = r_create_link.json()
+#     create_link_url = create_link_json["links"][0]["url"]
+# else:
+#     create_link_json = r_create_link.json()
+#     create_link_url = create_link_json["url"]
+
+
+temp_link_url = "https://api.dropboxapi.com/2/files/get_temporary_link"
+
+temp_link_headers = {
     "Authorization": bearer_h,
     "Content-Type": "application/json"
 }
 
-data = {
-    "path": dropbox_path,
-    "settings": {}
+temp_link_data = {
+    "path": dropbox_path
 }
 
-r_create_link = requests.post(url, headers=headers, data=json.dumps(data))
-if not r_create_link.ok:
-    url = "https://api.dropboxapi.com/2/sharing/get_shared_links"
+r_temp_link = requests.post(temp_link_url, headers=temp_link_headers, data=json.dumps(temp_link_data))
+r_temp_link_json = r_temp_link.json()
 
-    headers = {
-        "Authorization": bearer_h,
-        "Content-Type": "application/json"
-    }
 
-    data = {
-        "path": dropbox_path
-    }
+print(r_temp_link_json["link"])
 
-    r_create_link = requests.post(url, headers=headers, data=json.dumps(data))
-    create_link_json = r_create_link.json()
-    create_link_url = create_link_json["links"][0]["url"]
-else:
-    create_link_json = r_create_link.json()
-    create_link_url = create_link_json["url"]
 
-print(create_link_url)
+# url = "https://api.dropboxapi.com/2/files/delete"
+#
+# headers = {
+#     "Authorization": "bearer_h",
+#     "Content-Type": "application/json"
+# }
+#
+# data = {
+#     "path": dropbox_path
+# }
+#
+# r = requests.post(url, headers=headers, data=json.dumps(data))
