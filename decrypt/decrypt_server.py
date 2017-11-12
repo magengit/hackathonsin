@@ -14,7 +14,7 @@ from flask import Flask, Blueprint, request
 
 from decrypt.dbx_decrypt import decrypt_file, LOCAL_DIR, get_filename
 
-SERVER_IP = '31.133.156.217'
+SERVER_IP = 'localhost'
 
 decrypt_app = Flask(__name__)
 decrypt_app.template_folder = 'data/'
